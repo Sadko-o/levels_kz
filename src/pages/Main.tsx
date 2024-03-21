@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { addPage } from "../actions/Action.tsx";
 import { deletePage } from "../actions/Action.tsx";
+import styled from "styled-components";
 
 export default function Home(){
     const pages = useSelector((state) => state.pages);
@@ -46,48 +47,161 @@ export default function Home(){
         
     // }
     return (
-        <div className="navigation-menu">
-            <div className="search-container">
-                <input type="text" placeholder="Search by company..." name="search"/>
-                <button type="submit">
-                    Submit
-                </button>
-            </div>
-            <div className="table-menu">
-                <input value={company} onChange={handleCompanyChange} type="text" name="company" placeholder="Company Name" className="myInputs"/>
-                <input value={location} onChange={handleLoctionChange} type="text" name="location" placeholder="Location" className="myInputs"/>
-                <input value={experience} onChange={handleExperienceChange} type="text" name="experience" placeholder="Experience" className="myInputs"/>
-                <input value={annualSalary} onChange={handleAnnualSalaryChange} type="text" name="annualSalary" placeholder="Annual Salary" className="myInputs"/>
-                <input value={date} onChange={handleDateChange} type="text" name="date" placeholder="Date" className="myInputs"/>
-                <input value={specialization} onChange={handleSpecializationChange} type="text" name="specialization" placeholder="Specialization" className="myInputs"/>
-                <button onClick={onSave} className="pgbutton">
-                    Save
-                </button>
-                <table>
-                    <tr>  
-                        <td className="columns">Company</td>
-                        <td className="columns">Location</td>
-                        <td className="columns">Experience</td>
-                        <td className="columns">Annual Salary</td>
-                        <td className="columns">Date</td>
-                        <td className="columns">Specialization</td>
-                    </tr>
-                </table>
-                <div className="scroll">
-                    {pages?.map((page) => (
-                        <p /*key={pages.company} className="person"*/>
-                            <td className="columns">{page.company}</td>
-                            <td className="columns">{page.location}</td>
-                            <td className="columns">{page.experience}</td>
-                            <td className="columns">{page.annualSalary}</td>
-                            <td className="columns">{page.date}</td>
-                            <td className="columns">{page.specialization}</td>
-                            <button onClick= {() => dispatch(deletePage(page.company))}>Delete</button>
-                            </p>
-                            )
-                    )}
-                </div>
-            </div>
-        </div>
+        <NavigationMenu>
+            <SearchContainer>
+                <Input type="text" placeholder="Search by company..." name="search"/>
+                <Button type="submit">
+                    Add
+                </Button>
+        </SearchContainer>
+            <TableMenu>
+                <Input value={company} onChange={handleCompanyChange} type="text" name="company" placeholder="Company Name" className="myInputs"/>
+                <Input value={location} onChange={handleLoctionChange} type="text" name="location" placeholder="Location" className="myInputs"/>
+                <Input value={experience} onChange={handleExperienceChange} type="text" name="experience" placeholder="Experience" className="myInputs"/>
+                <Input value={annualSalary} onChange={handleAnnualSalaryChange} type="text" name="annualSalary" placeholder="Annual Salary" className="myInputs"/>
+                <Input value={date} onChange={handleDateChange} type="text" name="date" placeholder="Date" className="myInputs"/>
+                <Input value={specialization} onChange={handleSpecializationChange} type="text" name="specialization" placeholder="Specialization" className="myInputs"/>
+                <SaveButton onClick={onSave} className="pgbutton">Save</SaveButton>
+                <Table>
+                    <thead>
+                    <TableRow>  
+                        <TableHeader className="columns">Company</TableHeader>
+                        <TableHeader className="columns">Location</TableHeader>
+                        <TableHeader className="columns">Experience</TableHeader>
+                        <TableHeader className="columns">Annual Salary</TableHeader>
+                        <TableHeader className="columns">Date</TableHeader>
+                        <TableHeader className="columns">Specialization</TableHeader>
+                    </TableRow>
+                    </thead>
+                
+                    <tbody>    
+                        {pages?.map((page, index) => (
+                            <TableRow key={index}>
+                                <TableColumn>{page.company}</TableColumn>
+                                <TableColumn>{page.location}</TableColumn>
+                                <TableColumn>{page.experience}</TableColumn>
+                                <TableColumn>{page.annualSalary}</TableColumn>
+                                <TableColumn>{page.date}</TableColumn>
+                                <TableColumn>{page.specialization}</TableColumn>
+                                <TableColumn>
+                                    <DeleteButton onClick={() => dispatch(deletePage(page.company))}>Delete</DeleteButton>
+                                </TableColumn>
+                                
+                            </TableRow>
+                            ))}
+                    </tbody>
+                </Table>
+            </TableMenu>
+        </NavigationMenu>
     );
 }
+
+export const NavigationMenu = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+`;
+
+export const SearchContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 100%;
+`;
+
+export const TableMenu = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+`;
+
+export const Input = styled.input`
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+`;
+
+export const Button = styled.button`
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    text-transform: uppercase; 
+    font-weight: bold;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+`;
+
+export const SaveButton = styled(Button)`
+    background-color: #28a745;  
+    &:hover {
+        background-color: #218838;
+    }
+    text-transform: uppercase; 
+    font-weight: bold;
+`;
+
+export const Table = styled.table`
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    margin-top: 20px;
+`;
+
+export const TableRow = styled.tr`
+    &:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    &:hover {
+        background-color: #ddd;
+    }
+`;
+
+export const TableHeader = styled.td`
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+`;
+
+
+export const TableColumn = styled.td`
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+`;
+
+export const ScrollContainer = styled.div`
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+`;
+
+export const PageRow = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    &:last-child {
+        border-bottom: none;
+    }
+`;
+
+export const DeleteButton = styled(Button)`
+    background-color: #dc3545; 
+    &:hover {
+        background-color: #bd2130;
+    }
+    text-transform: uppercase; 
+    font-weight: bold;
+`;
